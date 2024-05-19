@@ -1,0 +1,5 @@
+alias cat='bat'
+alias vim='nvim'
+alias lsf='exa -lagF -i --color-scale --git'
+alias ls='exa --color-scale'
+alias sl='exa -lagF -i --color-scale --git'
