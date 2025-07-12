@@ -53,7 +53,6 @@ function venv() {
             echo "$alias_str" >> "$temp_alias"
         fi
     done
-    echo "To activate an environment, simply type the name."
     source "$temp_alias"
     rm -rf "$temp_alias"
     popd > /dev/null
