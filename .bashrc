@@ -35,8 +35,10 @@ fi
 # -----------------------------------------------------
 export LD_LIBRARY_PATH=/opt/rocm/lib:$LD_LIBRARY_PATH
 export PATH="/opt/rocm/bin":$PATH
+export PATH="/home/$USER/.local/bin/bin":$PATH
+eval "$(fzf --bash)"
 
-function venv() {
+function echo-alias-venv() {
     local dir=$1
     local temp_alias="/home/$USER/.python_envs_aliases"
     if [[ -f "$temp_alias" ]]; then
@@ -58,4 +60,22 @@ function venv() {
     popd > /dev/null
 }
 
-venv "/home/$USER/PyEnvs/"
+function venv() {
+    # ask user for search directory
+    read -e -p "Enter the directory to search for python environments: " dir
+    dir="${dir/#\~/$HOME}"
+    if [[ ! -d "$dir" ]]; then
+        echo "Directory $dir does not exist."
+        return 1
+    fi
+    echo-alias-venv "$dir/"
+}
+
+. "$HOME/.cargo/env"
+
+# -----------------------------------------------------
+# Enable shell options for autocd and cdspell
+# -----------------------------------------------------
+shopt -s autocd
+shopt -s cdspell
+
