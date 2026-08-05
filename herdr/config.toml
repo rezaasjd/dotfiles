@@ -1,0 +1,26 @@
+[remote]
+manage_ssh_config = true
+
+[keys]
+prefix = "ctrl+space"
+goto = "prefix+s"
+new_tab = "prefix+c"
+next_tab = "prefix+n"
+previous_tab = "prefix+p"
+focus_pane_left = "prefix+h"
+navigate_workspace_down = "j"
+navigate_pane_down = "ctrl+j"
+split_horizontal = "prefix+minus"
+settings = "prefix+S"
+
+[[keys.command]]
+key = "prefix+g"
+type = "popup"
+command = "lazygit"
+description = "run lazygit"
+width = "100%"
+height = "100%"
+
+[theme]
+name = "rose-pine"
+auto_switch = false
