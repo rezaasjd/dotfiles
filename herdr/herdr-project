@@ -1,0 +1,50 @@
+#!/usr/bin/bash
+# herdr-project — tmux-session-style project switching for herdr.
+# Select a directory (or pass one), then focus an existing herdr workspace
+# rooted there, or create and focus a fresh one.
+#
+#   herdr-project            fuzzy-pick a dir under $PROJECT_DIR
+#   herdr-project ~/proj/x   open a specific directory
+
+if [[ $# -eq 1 ]]; then
+    selected=$1
+else
+    search_dir="${PROJECT_DIR:-$HOME/programming}"
+    selected=$(find "$search_dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | fzf)
+fi
+
+if [[ -z $selected ]]; then
+    exit 0
+fi
+
+selected=$(realpath "$selected")
+selected_name=$(basename "$selected" | tr . _)
+
+session_dir=${HERDR_SOCKET_PATH:+$(dirname "$HERDR_SOCKET_PATH")}
+session_dir=${session_dir:-$HOME/.config/herdr}
+
+ws_id=""
+if [[ -f "$session_dir/session.json" ]]; then
+    ws_id=$(python3 -c '
+import json, sys
+sel, path = sys.argv[1], sys.argv[2]
+try:
+    data = json.load(open(path))
+except Exception:
+    sys.exit(0)
+for workspace in data.get("workspaces", []):
+    if workspace.get("identity_cwd") == sel:
+        print(workspace["id"])
+        break
+' "$selected" "$session_dir/session.json")
+fi
+
+if [[ ${HERDR_ENV:-} == 1 ]]; then
+    if [[ -n $ws_id ]]; then
+        herdr workspace focus "$ws_id"
+    else
+        herdr workspace create --cwd "$selected" --label "$selected_name" --focus
+    fi
+else
+    exec herdr
+fi
