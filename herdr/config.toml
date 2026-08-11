@@ -23,15 +23,12 @@ height = "100%"
 
 [[keys.command]]
 key = "prefix+g"
-type = "popup"
+type = "pane"
 command = "lazygit"
 description = "run lazygit"
-width = "100%"
-height = "100%"
+# width = "100%"
+# height = "100%"
 
 [theme]
 name = "rose-pine"
 auto_switch = false
-
-[ui.sidebar]
-width = 20
